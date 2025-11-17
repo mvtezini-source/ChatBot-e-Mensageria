@@ -1,0 +1,41 @@
+{
+  "openapi": "3.0.0",
+  "info": { "title": "Chat Messaging API", "version": "1.0.0" },
+  "paths": {
+    "/api/register": {
+      "post": {
+        "summary": "Register user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref":"#/components/schemas/RegisterRequest"}
+            }
+          }
+        },
+        "responses": {"201": {"description":"Created"}}
+      }
+    },
+    "/api/login": {
+      "post": {
+        "summary": "Login",
+        "requestBody": {"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoginRequest"}}}},
+        "responses": {"200": {"description":"token","content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoginResponse"}}}}}
+      }
+    },
+    "/api/conversations": {"get": {"summary":"List conversations","security":[{"bearerAuth":[]}],"responses":{"200":{"description":"list","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Conversation"}}}}}}}},
+    "/api/conversations/{id}/messages": { "get": { "summary":"Get conversation messages","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"integer"}}],"security":[{"bearerAuth":[]}],"responses":{"200":{"description":"messages","content":{"application/json":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/Message"}}}}},"403":{"description":"forbidden"}} } },
+    "/api/messages": { "post": { "summary":"Persist message","security":[{"bearerAuth":[]}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/PostMessageRequest"}}}},"responses":{"200":{"description":"ok","content":{"application/json":{"schema":{"type":"object","properties":{"id":{"type":"integer"}}}}}},"403":{"description":"forbidden"}} }
+  },
+  "components": {
+    "securitySchemes": {"bearerAuth":{"type":"http","scheme":"bearer","bearerFormat":"JWT"}},
+    "schemas": {
+      "RegisterRequest": {"type":"object","properties":{"name":{"type":"string"},"email":{"type":"string"},"password":{"type":"string"}},"required":["name","email","password"]},
+      "LoginRequest": {"type":"object","properties":{"email":{"type":"string"},"password":{"type":"string"}},"required":["email","password"]},
+      "LoginResponse": {"type":"object","properties":{"token":{"type":"string"}}},
+      "Conversation": {"type":"object","properties":{"id":{"type":"integer"},"title":{"type":"string"},"is_group":{"type":"boolean"}}},
+      "Message": {"type":"object","properties":{"id":{"type":"integer"},"conversation_id":{"type":"integer"},"user_id":{"type":"integer"},"content":{"type":"string"},"created_at":{"type":"string","format":"date-time"},"author_name":{"type":"string"}}},
+      "PostMessageRequest": {"type":"object","properties":{"conversation_id":{"type":"integer"},"content":{"type":"string"}},"required":["conversation_id","content"]}
+    }
+  }
+}
