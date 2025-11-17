@@ -1,0 +1,14 @@
+{
+    "users": {
+        "alice@test.local": "1",
+        "bob@test.local": "2"
+    },
+    "conversations": {
+        "Chat com Bot": "1",
+        "Grupo Geral": "2"
+    },
+    "test_credentials": {
+        "email": "alice@test.local",
+        "password": "password123"
+    }
+}

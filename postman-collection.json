@@ -1,0 +1,156 @@
+{
+  "info": {
+    "name": "ChatBot e Mensageria API",
+    "description": "Coleção de endpoints para testar o sistema de chat em tempo real",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Test\",\n  \"email\": \"alice.test@local\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/register",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"alice@test.local\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "login"]
+            }
+          },
+          "description": "Retorna um JWT token. Copie o token para usar nos demais endpoints."
+        }
+      ]
+    },
+    {
+      "name": "Conversations",
+      "item": [
+        {
+          "name": "List Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/conversations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "conversations"]
+            }
+          },
+          "description": "Lista todas as conversas do usuário autenticado. Substitua {{token}} pelo JWT obtido do login."
+        },
+        {
+          "name": "Get Conversation Messages",
+          "request": {
+            "method": "GET",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"}
+            ],
+            "url": {
+              "raw": "http://localhost:8000/api/conversations/1/messages",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "conversations", "1", "messages"]
+            }
+          },
+          "description": "Obtém o histórico de mensagens de uma conversa. Altere o ID (1) conforme necessário."
+        }
+      ]
+    },
+    {
+      "name": "Messages",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conversation_id\": 1,\n  \"content\": \"Olá bot! Qual é o horário de atendimento?\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/messages",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "messages"]
+            }
+          },
+          "description": "Envia uma mensagem para uma conversa. A mensagem é persistida no banco e o bot responde automaticamente se habilitado."
+        }
+      ]
+    },
+    {
+      "name": "Bot",
+      "item": [
+        {
+          "name": "Get Bot Response",
+          "request": {
+            "method": "POST",
+            "header": [
+              {"key": "Authorization", "value": "Bearer {{token}}"},
+              {"key": "Content-Type", "value": "application/json"}
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Qual é o seu horário?\",\n  \"conversation_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8000/api/bot/respond",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "8000",
+              "path": ["api", "bot", "respond"]
+            }
+          },
+          "description": "Teste manual o bot. Retorna a resposta sem enviar para a conversa."
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT Token - Obtenha via endpoint Login"
+    }
+  ]
+}
